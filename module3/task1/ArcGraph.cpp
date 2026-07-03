@@ -1,6 +1,6 @@
-#include <vector>
-
 #include "ArcGraph.h"
+
+#include <vector>
 
 ArcGraph::ArcGraph(int vertices_count) : vertices_count_(vertices_count) {}
 
