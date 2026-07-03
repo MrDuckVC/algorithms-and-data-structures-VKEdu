@@ -86,10 +86,9 @@ class Stack {
 
 class Queue {
  public:
-  Queue() {};
+  Queue() = default;
   Queue(const Queue&) = delete;
   Queue& operator=(const Queue&) = delete;
-
 
   void Push(int value) { stack_in.Push(value); }
   int Pop() {

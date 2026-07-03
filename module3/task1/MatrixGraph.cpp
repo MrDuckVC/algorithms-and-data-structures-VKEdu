@@ -1,5 +1,7 @@
 #include "MatrixGraph.h"
 
+#include <vector>
+
 MatrixGraph::MatrixGraph(int vertices_count) : matrix_(vertices_count, std::vector<bool>(vertices_count, false)) {}
 
 MatrixGraph::MatrixGraph(const IGraph& other) : matrix_(other.VerticesCount(), std::vector<bool>(other.VerticesCount(), false)) {

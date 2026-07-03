@@ -30,156 +30,155 @@
 | `4`<br>`0 1 2 3 4 5 6 7 8 9`  | `3`<br>`0 1 2 4 5 6 7 8 9`      |
 */
 
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <functional>
 #include <cstdint>
+#include <functional>
+#include <iostream>
+#include <queue>
+#include <vector>
 
 template <typename T, typename Compare = std::less<T>>
 class BTree {
-private:
-    struct Node {
-        bool leaf;
-        std::vector<T> keys;
-        std::vector<Node*> children;
+ private:
+  struct Node {
+    bool leaf;
+    std::vector<T> keys;
+    std::vector<Node*> children;
 
-        explicit Node(bool is_leaf, size_t t) : leaf(is_leaf) {
-            keys.reserve(2 * t - 1);
-            children.reserve(2 * t);
-        }
-    };
+    explicit Node(bool is_leaf, size_t t) : leaf(is_leaf) {
+      keys.reserve(2 * t - 1);
+      children.reserve(2 * t);
+    }
+  };
 
-    Node* root_;
-    size_t t_;
-    Compare cmp_;
+  Node* root_;
+  size_t t_;
+  Compare cmp_;
 
-    void SplitChild(Node* parent, int i) {
-        Node* full_child = parent->children[i];
-        Node* new_child = new Node(full_child->leaf, t_);
+  void SplitChild(Node* parent, int i) {
+    Node* full_child = parent->children[i];
+    Node* new_child = new Node(full_child->leaf, t_);
 
-        for (size_t j = 0; j < t_ - 1; ++j) {
-            new_child->keys.push_back(full_child->keys[j + t_]);
-        }
-
-        if (!full_child->leaf) {
-            for (size_t j = 0; j < t_; ++j) {
-                new_child->children.push_back(full_child->children[j + t_]);
-            }
-        }
-
-        parent->children.insert(parent->children.begin() + i + 1, new_child);
-
-        parent->keys.insert(parent->keys.begin() + i, full_child->keys[t_ - 1]);
-
-        full_child->keys.resize(t_ - 1);
-        if (!full_child->leaf) {
-            full_child->children.resize(t_);
-        }
+    for (size_t j = 0; j < t_ - 1; ++j) {
+      new_child->keys.push_back(full_child->keys[j + t_]);
     }
 
-public:
-    explicit BTree(size_t t, const Compare& cmp = Compare())
-        : root_(nullptr), t_(t), cmp_(cmp) {}
-
-    ~BTree() {
-        if (!root_) return;
-        std::queue<Node*> q;
-        q.push(root_);
-        while (!q.empty()) {
-            Node* curr = q.front();
-            q.pop();
-            for (Node* child : curr->children) {
-                q.push(child);
-            }
-            delete curr;
-        }
+    if (!full_child->leaf) {
+      for (size_t j = 0; j < t_; ++j) {
+        new_child->children.push_back(full_child->children[j + t_]);
+      }
     }
 
-    BTree(const BTree&) = delete;
-    BTree& operator=(const BTree&) = delete;
+    parent->children.insert(parent->children.begin() + i + 1, new_child);
 
-    void Add(const T& k) {
-        if (!root_) {
-            root_ = new Node(true, t_);
-            root_->keys.push_back(k);
-            return;
-        }
+    parent->keys.insert(parent->keys.begin() + i, full_child->keys[t_ - 1]);
 
-        if (root_->keys.size() == 2 * t_ - 1) {
-            Node* new_root = new Node(false, t_);
-            new_root->children.push_back(root_);
-            root_ = new_root;
-            SplitChild(new_root, 0);
-        }
+    full_child->keys.resize(t_ - 1);
+    if (!full_child->leaf) {
+      full_child->children.resize(t_);
+    }
+  }
 
-        Node* curr = root_;
-        while (true) {
-            int i = curr->keys.size() - 1;
+ public:
+  explicit BTree(size_t t, const Compare& cmp = Compare()) : root_(nullptr), t_(t), cmp_(cmp) {}
 
-            while (i >= 0 && cmp_(k, curr->keys[i])) {
-                i--;
-            }
+  ~BTree() {
+    if (!root_) return;
+    std::queue<Node*> q;
+    q.push(root_);
+    while (!q.empty()) {
+      Node* curr = q.front();
+      q.pop();
+      for (Node* child : curr->children) {
+        q.push(child);
+      }
+      delete curr;
+    }
+  }
+
+  BTree(const BTree&) = delete;
+  BTree& operator=(const BTree&) = delete;
+
+  void Add(const T& k) {
+    if (!root_) {
+      root_ = new Node(true, t_);
+      root_->keys.push_back(k);
+      return;
+    }
+
+    if (root_->keys.size() == 2 * t_ - 1) {
+      Node* new_root = new Node(false, t_);
+      new_root->children.push_back(root_);
+      root_ = new_root;
+      SplitChild(new_root, 0);
+    }
+
+    Node* curr = root_;
+    while (true) {
+      int i = curr->keys.size() - 1;
+
+      while (i >= 0 && cmp_(k, curr->keys[i])) {
+        i--;
+      }
+      i++;
+
+      if (curr->leaf) {
+        curr->keys.insert(curr->keys.begin() + i, k);
+        break;
+      } else {
+        if (curr->children[i]->keys.size() == 2 * t_ - 1) {
+          SplitChild(curr, i);
+
+          if (!cmp_(k, curr->keys[i])) {
             i++;
-
-            if (curr->leaf) {
-                curr->keys.insert(curr->keys.begin() + i, k);
-                break;
-            } else {
-                if (curr->children[i]->keys.size() == 2 * t_ - 1) {
-                    SplitChild(curr, i);
-
-                    if (!cmp_(k, curr->keys[i])) {
-                        i++;
-                    }
-                }
-                curr = curr->children[i];
-            }
+          }
         }
+        curr = curr->children[i];
+      }
     }
+  }
 
-    void PrintLevelOrder() const {
-        if (!root_) return;
-        std::queue<Node*> q;
-        q.push(root_);
+  void PrintLevelOrder() const {
+    if (!root_) return;
+    std::queue<Node*> q;
+    q.push(root_);
 
-        while (!q.empty()) {
-            int level_size = q.size();
-            bool first_in_level = true;
+    while (!q.empty()) {
+      int level_size = q.size();
+      bool first_in_level = true;
 
-            for (int i = 0; i < level_size; ++i) {
-                Node* curr = q.front();
-                q.pop();
+      for (int i = 0; i < level_size; ++i) {
+        Node* curr = q.front();
+        q.pop();
 
-                for (const T& key : curr->keys) {
-                    if (!first_in_level) {
-                        std::cout << " ";
-                    }
-                    std::cout << key;
-                    first_in_level = false;
-                }
-
-                for (Node* child : curr->children) {
-                    q.push(child);
-                }
-            }
-            std::cout << std::endl;
+        for (const T& key : curr->keys) {
+          if (!first_in_level) {
+            std::cout << " ";
+          }
+          std::cout << key;
+          first_in_level = false;
         }
+
+        for (Node* child : curr->children) {
+          q.push(child);
+        }
+      }
+      std::cout << std::endl;
     }
+  }
 };
 
 int main() {
-    size_t t;
-    if (!(std::cin >> t)) return 0;
+  size_t t;
+  if (!(std::cin >> t)) return 0;
 
-    BTree<uint32_t> btree(t);
+  BTree<uint32_t> btree(t);
 
-    uint32_t k;
-    while (std::cin >> k) {
-        btree.Add(k);
-    }
+  uint32_t k;
+  while (std::cin >> k) {
+    btree.Add(k);
+  }
 
-    btree.PrintLevelOrder();
+  btree.PrintLevelOrder();
 
-    return 0;
+  return 0;
 }

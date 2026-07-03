@@ -33,9 +33,11 @@
 | `6`<br>`9`<br>`0 3 1`<br>`0 4 2`<br>`1 2 7`<br>`1 3 2`<br>`1 4 3`<br>`1 5 3`<br>`2 5 3`<br>`3 4 4`<br>`3 5 6`<br>`0 2`<br> | `9` |
 */
 
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <queue>
+#include <utility>
 #include <vector>
 
 struct Edge {

@@ -29,9 +29,9 @@ bool IfOnlyOneBitEquealOne(unsigned int n) {
   bool fail = true;
   while (n > 0) {
     if (n & 1 && fail) {
-        fail = false;
+      fail = false;
     } else if (n & 1 && !fail) {
-        return false;
+      return false;
     }
     n >>= 1;
   }

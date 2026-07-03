@@ -34,8 +34,10 @@ $z$ во вселенную $(z+1) \pmod M$ за $a$ бутылок лимона
 | `6 1 5 2 1` | `2`       |
 */
 
+#include <functional>
 #include <iostream>
 #include <queue>
+#include <utility>
 #include <vector>
 
 class UniverseGraph {

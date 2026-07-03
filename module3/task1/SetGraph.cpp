@@ -1,5 +1,7 @@
 #include "SetGraph.h"
 
+#include <vector>
+
 SetGraph::SetGraph(int vertices_count) : adjacency_sets_(vertices_count), prev_adjacency_sets_(vertices_count) {}
 
 SetGraph::SetGraph(const IGraph& other) : adjacency_sets_(other.VerticesCount()), prev_adjacency_sets_(other.VerticesCount()) {

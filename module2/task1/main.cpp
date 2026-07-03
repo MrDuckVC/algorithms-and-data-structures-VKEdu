@@ -29,6 +29,7 @@ $g(k, i)=g(k, i-1) + i (\mod m)$. $m$ - степень двойки.
 #include <cassert>
 #include <iostream>
 #include <string>
+#include <utility>
 #include <vector>
 
 enum class State { EMPTY, KEY, DELETED };

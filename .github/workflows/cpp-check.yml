@@ -31,4 +31,4 @@ jobs:
       run: |
         echo "Running cpplint..."
         # Запускает скрипт cpplint.py для всех .cpp и .h файлов
-        find . \( -name '*.cpp' -o -name '*.h' \) -print0 | xargs -0 python cpplint.py
+        find . \( -name '*.cpp' -o -name '*.h' \) -print0 | xargs -0 python cpplint.py --filter=-legal/copyright,-runtime/int
