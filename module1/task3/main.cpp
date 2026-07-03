@@ -86,7 +86,7 @@ class Stack {
 
 class Queue {
  public:
-  Queue() {};
+  Queue() = default;
   Queue(const Queue&) = delete;
   Queue& operator=(const Queue&) = delete;
 
