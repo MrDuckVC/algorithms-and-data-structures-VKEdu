@@ -1,6 +1,7 @@
 #include "Graph.h"
 
 #include <algorithm>
+#include <vector>
 
 #include "DSU.h"
 

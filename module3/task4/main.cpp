@@ -41,6 +41,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <functional>
 #include <iostream>
 #include <queue>
 #include <string>

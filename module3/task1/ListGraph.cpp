@@ -1,5 +1,7 @@
 #include "ListGraph.h"
 
+#include <vector>
+
 ListGraph::ListGraph(int vertices_count) : adjacency_list_(vertices_count), prev_adjacency_list_(vertices_count) {}
 
 ListGraph::ListGraph(const IGraph& other) : adjacency_list_(other.VerticesCount()), prev_adjacency_list_(other.VerticesCount()) {
