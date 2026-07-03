@@ -323,7 +323,7 @@ void Decode(IInputStream& compressed, IOutputStream& original) {
         if (!br.ReadByte(b1) || !br.ReadByte(b2)) break;
         block_size = (static_cast<uint32_t>(b1) << 8) | b2;
       }
-    }                                                                                         
+    }
 
     pool.clear();
     int root = DeserializeTreeDFS(br, pool);

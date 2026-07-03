@@ -90,7 +90,6 @@ class Queue {
   Queue(const Queue&) = delete;
   Queue& operator=(const Queue&) = delete;
 
-
   void Push(int value) { stack_in.Push(value); }
   int Pop() {
     if (stack_out.IsEmpty()) {
